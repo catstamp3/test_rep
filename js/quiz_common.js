@@ -54,6 +54,7 @@ document.getElementById('nextBtn').onclick = () => {
   // 最後の問題が終わったら
   if (current >= questions.length) {
     saveProgress();
+    showFinalResult();
     document.getElementById('nextBtn').style.display = 'none';
     document.getElementById('topBtn').style.display = 'inline';
     return;
@@ -73,4 +74,14 @@ function saveProgress() {
     total: questions.length
   };
   localStorage.setItem('quizProgress', JSON.stringify(progress));
+}
+
+function showFinalResult() {
+  const area = document.getElementById('questionArea');
+  area.innerHTML = `
+    <h3>結果</h3>
+    <p>${questions.length}問中 ${correctCount}問正解</p>
+  `;
+
+  document.getElementById('result').textContent = '';
 }
