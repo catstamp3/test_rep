@@ -7,7 +7,9 @@
 <body>
   <h1>模擬問題集コンテンツマップ</h1>
 
+  <!-- カテゴリ一覧 -->
   <ul>
+    <li><a href="quiz_00.html">00. 初めの10問</a></li>
     <li><a href="quiz_01.html">01. 組織設定とユーザー管理</a></li>
     <li><a href="quiz_02.html">02. セキュリティとアクセス</a></li>
     <li><a href="quiz_03.html">03. 標準オブジェクトと営業プロセス</a></li>
@@ -22,11 +24,18 @@
 
   <hr>
 
+  <!-- 学習状況 -->
   <h2>学習状況</h2>
   <ul id="progressList"></ul>
 
   <script>
+    /*
+      index.html は将来カテゴリが増えても
+      ここを直さなくていい前提。
+      未受験・未実装でも表示される。
+    */
     const categoryMap = [
+      { id: '00', title: '初めの10問' },
       { id: '01', title: '組織設定とユーザー管理' },
       { id: '02', title: 'セキュリティとアクセス' },
       { id: '03', title: '標準オブジェクトと営業プロセス' },
@@ -39,18 +48,22 @@
       { id: '10', title: 'データ連携と配布' }
     ];
 
-    const progress = JSON.parse(localStorage.getItem('quizProgress') || '{}');
+    const progress =
+      JSON.parse(localStorage.getItem('quizProgress') || '{}');
+
     const ul = document.getElementById('progressList');
 
     categoryMap.forEach(cat => {
       const li = document.createElement('li');
+
       if (progress[cat.id]) {
         li.textContent =
-          `${cat.id}. ${cat.title}：${progress[cat.id].correct}/${progress[cat.id].total} 正解`;
+          `${cat.title}：${progress[cat.id].correct} / ${progress[cat.id].total} 正解`;
       } else {
         li.textContent =
-          `${cat.id}. ${cat.title}：未受験`;
+          `${cat.title}：未受験`;
       }
+
       ul.appendChild(li);
     });
   </script>
