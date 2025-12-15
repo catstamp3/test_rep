@@ -57,6 +57,7 @@ document.getElementById('nextBtn').onclick = () => {
   if (current >= questions.length) {
     saveProgress();
     showFinalResult();
+    submitBtn.style.display = 'none';
     document.getElementById('nextBtn').style.display = 'none';
     document.getElementById('topBtn').style.display = 'inline';
     return;
