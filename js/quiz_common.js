@@ -27,6 +27,7 @@ function showQuestion() {
 
   document.getElementById('result').textContent = '';
   document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('topBtn').style.display = 'none';
 }
 
 document.getElementById('submitBtn').onclick = () => {
@@ -35,7 +36,6 @@ document.getElementById('submitBtn').onclick = () => {
     .sort();
 
   const answer = [...questions[current].answer].sort();
-
   const resultEl = document.getElementById('result');
 
   if (JSON.stringify(checked) === JSON.stringify(answer)) {
@@ -51,13 +51,19 @@ document.getElementById('submitBtn').onclick = () => {
 document.getElementById('nextBtn').onclick = () => {
   current++;
 
+  // 最後の問題が終わったら
   if (current >= questions.length) {
     saveProgress();
-    alert(`終了！ ${correctCount}/${questions.length} 正解`);
-    location.href = 'index.html';
+    document.getElementById('nextBtn').style.display = 'none';
+    document.getElementById('topBtn').style.display = 'inline';
     return;
   }
+
   showQuestion();
+};
+
+document.getElementById('topBtn').onclick = () => {
+  location.href = 'index.html'; // リンク切れOK前提
 };
 
 function saveProgress() {
