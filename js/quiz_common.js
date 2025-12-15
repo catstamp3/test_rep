@@ -46,6 +46,8 @@ document.getElementById('submitBtn').onclick = () => {
   }
 
   document.getElementById('nextBtn').style.display = 'inline';
+  document.getElementById('result').textContent =
+  `${currentQuestionIndex + 1}問中 ${correctCount}問正解`;
 };
 
 document.getElementById('nextBtn').onclick = () => {
