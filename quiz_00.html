@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>模擬問題集 - 初めの10問</title>
+</head>
+<body>
+  <h2 id="categoryTitle"></h2>
+
+  <div id="questionArea"></div>
+
+  <button id="submitBtn">解答する</button>
+  <button id="nextBtn" style="display:none">
+    次の問題に進む
+  </button>
+  <button id="topBtn" style="display:none">
+    トップへ戻る
+  </button>
+
+  <p id="result"></p>
+
+  <script>
+    const CATEGORY_ID = '00';
+    const DATA_FILE = '00_basic.json';
+  </script>
+
+  <script src="js/quiz_common.js"></script>
+</body>
+</html>
