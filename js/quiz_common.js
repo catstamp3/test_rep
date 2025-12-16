@@ -8,7 +8,7 @@ let questions = [];
 fetch(DATA_FILE)
   .then(res => res.json())
   .then(data => {
-    questions = data.questions || data;
+    questions = data.questions;
     showQuestion();
   });
 
