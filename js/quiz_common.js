@@ -17,7 +17,7 @@ function showQuestion() {
   const container = document.getElementById("quiz-container");
 
   let html = `
-    <h2>Q${q.id}</h2>
+    <h2>Q${q.no}</h2>
     <p>${q.question}</p>
   `;
 
