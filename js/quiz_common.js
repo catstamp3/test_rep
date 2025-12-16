@@ -1,90 +1,79 @@
-let questions = [];
-let current = 0;
-let correctCount = 0;
+// quiz_common.js（解説対応版）
 
-fetch(`data/${DATA_FILE}`)
+let currentIndex = 0;
+let correctCount = 0;
+let questions = [];
+
+// DATA_FILE は quiz_xx.html 側で定義されている前提
+fetch(DATA_FILE)
   .then(res => res.json())
   .then(data => {
-    document.getElementById('categoryTitle').textContent =
-      data.categoryTitle;
-    questions = data.questions;
+    questions = data.questions || data;
     showQuestion();
   });
 
 function showQuestion() {
-  const q = questions[current];
-  const area = document.getElementById('questionArea');
-  area.innerHTML = `<h3>Q${q.no}. ${q.question}</h3>`;
+  const q = questions[currentIndex];
+  const container = document.getElementById("quiz-container");
 
-  q.choices.forEach((c, i) => {
-    area.innerHTML += `
+  let html = `
+    <h2>Q${q.id}</h2>
+    <p>${q.question}</p>
+  `;
+
+  q.choices.forEach((choice, index) => {
+    html += `
       <label>
-        <input type="checkbox" name="choice" value="${i}">
-        ${c}
+        <input type="checkbox" name="choice" value="${index}">
+        ${choice}
       </label><br>
     `;
   });
 
-  document.getElementById('result').textContent = '';
-  document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('topBtn').style.display = 'none';
+  html += `<button onclick="checkAnswer()">回答する</button>`;
+  container.innerHTML = html;
 }
 
-document.getElementById('submitBtn').onclick = () => {
-  const checked = [...document.querySelectorAll('input[name=choice]:checked')]
-    .map(c => Number(c.value))
+function checkAnswer() {
+  const q = questions[currentIndex];
+  const checked = [...document.querySelectorAll("input[name=choice]:checked")]
+    .map(el => Number(el.value))
     .sort();
 
-  const answer = [...questions[current].answer].sort();
-  const resultEl = document.getElementById('result');
+  const correct = [...q.answer].sort();
+  const isCorrect = JSON.stringify(checked) === JSON.stringify(correct);
 
-  if (JSON.stringify(checked) === JSON.stringify(answer)) {
-    correctCount++;
-    resultEl.textContent = '正解！';
+  if (isCorrect) correctCount++;
+
+  const container = document.getElementById("quiz-container");
+
+  let html = isCorrect
+    ? "<p>⭕ 正解！</p>"
+    : "<p>❌ 不正解</p>";
+
+  html += `<p>正解：${correct.map(i => i + 1).join("、")}</p>`;
+
+  // ★ 解説表示（あれば）
+  if (q.explanation) {
+    html += `
+      <div class="explanation">
+        <strong>解説</strong><br>
+        ${q.explanation}
+      </div>
+    `;
+  }
+
+  if (currentIndex === questions.length - 1) {
+    html += `<p>${questions.length}問中${correctCount}問正解</p>`;
+    html += `<button onclick="location.href='index.html'">トップへ戻る</button>`;
   } else {
-    resultEl.textContent = '不正解';
+    html += `<button onclick="nextQuestion()">次の問題に進む</button>`;
   }
 
-  document.getElementById('nextBtn').style.display = 'inline';
-  document.getElementById('result').textContent =
-  `${currentQuestionIndex + 1}問中 ${correctCount}問正解`;
-};
-
-document.getElementById('nextBtn').onclick = () => {
-  current++;
-
-  // 最後の問題が終わったら
-  if (current >= questions.length) {
-    saveProgress();
-    showFinalResult();
-    submitBtn.style.display = 'none';
-    document.getElementById('nextBtn').style.display = 'none';
-    document.getElementById('topBtn').style.display = 'inline';
-    return;
-  }
-
-  showQuestion();
-};
-
-document.getElementById('topBtn').onclick = () => {
-  location.href = 'index.html'; // リンク切れOK前提
-};
-
-function saveProgress() {
-  const progress = JSON.parse(localStorage.getItem('quizProgress') || '{}');
-  progress[CATEGORY_ID] = {
-    correct: correctCount,
-    total: questions.length
-  };
-  localStorage.setItem('quizProgress', JSON.stringify(progress));
+  container.innerHTML = html;
 }
 
-function showFinalResult() {
-  const area = document.getElementById('questionArea');
-  area.innerHTML = `
-    <h3>結果</h3>
-    <p>${questions.length}問中 ${correctCount}問正解</p>
-  `;
-
-  document.getElementById('result').textContent = '';
+function nextQuestion() {
+  currentIndex++;
+  showQuestion();
 }
