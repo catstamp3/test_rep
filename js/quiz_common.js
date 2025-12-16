@@ -67,7 +67,6 @@ function checkAnswer() {
     html += `<p>${questions.length}問中${correctCount}問正解</p>`;
     html += `<button onclick="location.href='index.html'">トップへ戻る</button>`;
   } else {
-    html += `<p>${questions.length}問中${correctCount}問正解</p>`;
     html += `<button onclick="nextQuestion()">次の問題に進む</button>`;
   }
 
