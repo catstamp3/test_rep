@@ -1,79 +1,70 @@
-// quiz_common.js（解説対応版）
-
-let currentIndex = 0;
-let correctCount = 0;
 let questions = [];
+let current = 0;
+let correctCount = 0;
 
-// DATA_FILE は quiz_xx.html 側で定義されている前提
 fetch(`data/${DATA_FILE}`)
   .then(res => res.json())
   .then(data => {
+    document.getElementById('categoryTitle').textContent =
+      data.categoryTitle;
     questions = data.questions;
     showQuestion();
   });
 
 function showQuestion() {
-  const q = questions[currentIndex];
-  const container = document.getElementById("quiz-container");
+  const q = questions[current];
+  const area = document.getElementById('questionArea');
+  area.innerHTML = `<h3>Q${q.no}. ${q.question}</h3>`;
 
-  let html = `
-    <h2>Q${q.no}</h2>
-    <p>${q.question}</p>
-  `;
-
-  q.choices.forEach((choice, index) => {
-    html += `
+  q.choices.forEach((c, i) => {
+    area.innerHTML += `
       <label>
-        <input type="checkbox" name="choice" value="${index}">
-        ${choice}
+        <input type="checkbox" name="choice" value="${i}">
+        ${c}
       </label><br>
     `;
   });
 
-  html += `<button onclick="checkAnswer()">回答する</button>`;
-  container.innerHTML = html;
+  document.getElementById('result').textContent = '';
+  document.getElementById('nextBtn').style.display = 'none';
 }
 
-function checkAnswer() {
-  const q = questions[currentIndex];
-  const checked = [...document.querySelectorAll("input[name=choice]:checked")]
-    .map(el => Number(el.value))
+document.getElementById('submitBtn').onclick = () => {
+  const checked = [...document.querySelectorAll('input[name=choice]:checked')]
+    .map(c => Number(c.value))
     .sort();
 
-  const correct = [...q.answer].sort();
-  const isCorrect = JSON.stringify(checked) === JSON.stringify(correct);
+  const answer = [...questions[current].answer].sort();
 
-  if (isCorrect) correctCount++;
+  const resultEl = document.getElementById('result');
 
-  const container = document.getElementById("quiz-container");
-
-  let html = isCorrect
-    ? "<p>⭕ 正解！</p>"
-    : "<p>❌ 不正解</p>";
-
-  html += `<p>正解：${correct.map(i => i + 1).join("、")}</p>`;
-
-  // ★ 解説表示（あれば）
-  if (q.explanation) {
-    html += `
-      <div class="explanation">
-        <strong>解説</strong><br>
-        ${q.explanation}
-      </div>
-    `;
-  }
-
-  if (currentIndex === questions.length - 1) {
-    html += `<p>${questions.length}問中${correctCount}問正解</p>`;
-    html += `<button onclick="location.href='index.html'">トップへ戻る</button>`;
+  if (JSON.stringify(checked) === JSON.stringify(answer)) {
+    correctCount++;
+    resultEl.textContent = '正解！';
   } else {
-    html += `<button onclick="nextQuestion()">次の問題に進む</button>`;
+    resultEl.textContent = '不正解';
   }
 
-  container.innerHTML = html;
-}
+  document.getElementById('nextBtn').style.display = 'inline';
+};
 
-function nextQuestion() {
-  currentIndex++;
+document.getElementById('nextBtn').onclick = () => {
+  current++;
+
+  if (current >= questions.length) {
+    saveProgress();
+    alert(`終了！ ${correctCount}/${questions.length} 正解`);
+    location.href = 'index.html'; // リンク切れOK前提
+    return;
+  }
   showQuestion();
+};
+
+function saveProgress() {
+  const progress = JSON.parse(localStorage.getItem('quizProgress') || '{}');
+  progress[CATEGORY_ID] = {
+    correct: correctCount,
+    total: questions.length
+  };
+  localStorage.setItem('quizProgress', JSON.stringify(progress));
 }
