@@ -5,7 +5,7 @@ let correctCount = 0;
 let questions = [];
 
 // DATA_FILE は quiz_xx.html 側で定義されている前提
-fetch(DATA_FILE)
+fetch(`data/${DATA_FILE}`)
   .then(res => res.json())
   .then(data => {
     questions = data.questions;
