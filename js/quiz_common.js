@@ -11,9 +11,18 @@ fetch(`data/${DATA_FILE}`)
     showQuestion();
   });
 
+function updateScore() {
+  const scoreEl = document.getElementById('score');
+  if (!scoreEl) return;
+
+  scoreEl.textContent =
+    `正解数：${correctCount} / ${current + 1}`;
+}
+
 function showQuestion() {
   const q = questions[current];
   const area = document.getElementById('questionArea');
+
   area.innerHTML = `<h3>Q${q.no}. ${q.question}</h3>`;
 
   q.choices.forEach((c, i) => {
@@ -25,8 +34,11 @@ function showQuestion() {
     `;
   });
 
-  document.getElementById('result').textContent = '';
+  document.getElementById('result').innerHTML = '';
   document.getElementById('nextBtn').style.display = 'none';
+
+  // ★ 問題表示時点のスコア
+  updateScore();
 }
 
 document.getElementById('submitBtn').onclick = () => {
@@ -34,11 +46,9 @@ document.getElementById('submitBtn').onclick = () => {
     .map(c => Number(c.value))
     .sort();
 
-  const answer = [...questions[current].answer].sort();
-
-  const resultEl = document.getElementById('result');
-
   const q = questions[current];
+  const answer = [...q.answer].sort();
+
   const isCorrect =
     JSON.stringify(checked) === JSON.stringify(answer);
 
@@ -53,19 +63,22 @@ document.getElementById('submitBtn').onclick = () => {
   // 正解番号表示
   html += `<p>正解：${answer.map(i => i + 1).join('、')}</p>`;
 
-  // ★ 解説表示（ここが追加）
+  // 解説（空でもOK）
   if (q.explanation) {
     html += `
-      <div class="explanation" style="margin-top:10px;padding:8px;border:1px solid #ccc;">
+      <div class="explanation"
+           style="margin-top:10px;padding:8px;border:1px solid #ccc;">
         <strong>解説</strong><br>
         ${q.explanation.replace(/\n/g, "<br>")}
       </div>
     `;
   }
 
-  resultEl.innerHTML = html;
-
+  document.getElementById('result').innerHTML = html;
   document.getElementById('nextBtn').style.display = 'inline';
+
+  // ★ 回答後にスコア更新
+  updateScore();
 };
 
 document.getElementById('nextBtn').onclick = () => {
@@ -77,14 +90,18 @@ document.getElementById('nextBtn').onclick = () => {
     location.href = 'index.html'; // リンク切れOK前提
     return;
   }
+
   showQuestion();
 };
 
 function saveProgress() {
-  const progress = JSON.parse(localStorage.getItem('quizProgress') || '{}');
+  const progress =
+    JSON.parse(localStorage.getItem('quizProgress') || '{}');
+
   progress[CATEGORY_ID] = {
     correct: correctCount,
     total: questions.length
   };
+
   localStorage.setItem('quizProgress', JSON.stringify(progress));
 }
