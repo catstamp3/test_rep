@@ -40,6 +40,7 @@ function showQuestion() {
 
   // ★ 問題表示時点のスコア
   updateScore();
+  
 }
 
 document.getElementById('submitBtn').onclick = () => {
@@ -81,6 +82,7 @@ document.getElementById('submitBtn').onclick = () => {
 
   // ★ 回答後にスコア更新
   updateScore();
+
 };
 
 document.getElementById('nextBtn').onclick = () => {
@@ -95,6 +97,13 @@ document.getElementById('nextBtn').onclick = () => {
 
   showQuestion();
 };
+
+document.getElementById('topBtn').onclick = () => {
+  saveProgress();
+  location.href = 'index.html'; 
+  return;
+};
+
 
 function saveProgress() {
   const progress =
