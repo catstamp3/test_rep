@@ -36,6 +36,7 @@ function showQuestion() {
 
   document.getElementById('result').innerHTML = '';
   document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('topBtna').style.display = 'none';
 
   // ★ 問題表示時点のスコア
   updateScore();
@@ -76,6 +77,7 @@ document.getElementById('submitBtn').onclick = () => {
 
   document.getElementById('result').innerHTML = html;
   document.getElementById('nextBtn').style.display = 'inline';
+  document.getElementById('topBtn').style.display = 'inline';
 
   // ★ 回答後にスコア更新
   updateScore();
