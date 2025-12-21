@@ -1,6 +1,6 @@
 {
   "categoryId": "08",
-  "categoryTitle": "活動の管理（6問）",
+  "categoryTitle": "活動の管理（5問）",
   "questions": [
     {
       "no": 299,
@@ -77,4 +77,5 @@
       "explanation": ""
     }
   ]
+
 }
