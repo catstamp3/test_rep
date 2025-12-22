@@ -180,6 +180,9 @@
         // ② クイズ画面用の一時データも削除（Safari対策）
         localStorage.removeItem('currentIndex');
         localStorage.removeItem('correctCount');
+        localStorage.removeItem('answeredCount');
+        localStorage.removeItem('answeredCorrectly');
+        localStorage.removeItem('answeredOnce');
 
         location.reload();
       };
@@ -197,3 +200,4 @@
   </script>
 </body>
 </html>
+
