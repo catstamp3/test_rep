@@ -26,8 +26,12 @@ function updateScore() {
   const scoreEl = document.getElementById('score');
   if (!scoreEl) return;
 
+  // ★ 回答済み数は localStorage に保存された currentIndex を使う
+  const answered =
+    Number(localStorage.getItem('currentIndex')) || 0;
+
   scoreEl.textContent =
-    `正解数：${correctCount} / ${current + 1}`;
+    `正解数：${correctCount} / ${answered}`;
 }
 
 function showQuestion() {
@@ -94,7 +98,7 @@ document.getElementById('submitBtn').onclick = () => {
   updateScore();
 
   // ★ Safari対策：途中状態保存
-  localStorage.setItem('currentIndex', current +1);
+  localStorage.setItem('currentIndex', current + 1);
   localStorage.setItem('correctCount', correctCount);
 
   // ★ index 用進捗も毎問更新
@@ -140,4 +144,3 @@ function saveProgress() {
 
   localStorage.setItem('quizProgress', JSON.stringify(progress));
 }
-
