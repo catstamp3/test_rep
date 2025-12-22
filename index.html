@@ -1,194 +1,140 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>模擬問題集 コンテンツマップ</title>
+  <meta charset="UTF-8">
+  <title>Salesforce 管理者 模擬問題集</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
     body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f6f7;
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background: linear-gradient(180deg, #f4f6f9, #e9eef5);
-      color: #333;
+      padding: 16px;
     }
 
-    header {
-      padding: 24px 16px;
+    h1 {
       text-align: center;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 22px;
-    }
-
-    main {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 0 16px 40px;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    li {
+    .category {
       background: #fff;
-      border-radius: 12px;
+      border-radius: 8px;
       padding: 16px;
       margin-bottom: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
 
-    .cat-title {
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .progress {
-      font-size: 13px;
-      color: #555;
-    }
-
-    /* ===== ボタンエリア ===== */
-    .btn-area {
+    .buttons {
+      margin-top: 8px;
       display: flex;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 8px;
     }
 
-    .start-btn,
-    .reset-btn {
-      display: inline-block;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-size: 14px;
-      text-decoration: none;
-      cursor: pointer;
+    button {
+      padding: 6px 12px;
+      border-radius: 4px;
       border: none;
-      transition: background 0.15s ease,
-                  transform 0.15s ease,
-                  box-shadow 0.15s ease;
+      cursor: pointer;
     }
 
-    .start-btn {
-      background: #0176d3;
+    .start {
+      background: #0d6efd;
       color: #fff;
     }
 
-    .start-btn:hover {
-      background: #015fb3;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    .reset {
+      background: #6c757d;
+      color: #fff;
     }
 
-    .reset-btn {
-      background: #e5e7eb;
+    .progress {
+      margin-top: 4px;
       color: #333;
-    }
-
-    .reset-btn:hover {
-      background: #d1d5db;
-      transform: translateY(-1px);
-    }
-
-    footer {
-      text-align: center;
-      font-size: 12px;
-      color: #777;
-      margin-top: 30px;
+      font-size: 14px;
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <h1>模擬問題集 コンテンツマップ</h1>
-  </header>
 
-  <main>
-    <ul id="categoryList"></ul>
-  </main>
+<h1>模擬問題集 コンテンツマップ</h1>
 
-  <footer>
-    Salesforce 認定アドミニストレーター対策
-  </footer>
+<div id="categoryList"></div>
 
-  <script>
-    const categories = [
-      { id: '01', title: '初めの10問（10問）' },
-      { id: '02', title: '組織の設定（30問）' },
-      { id: '03', title: 'ユーザの設定（30問）' },
-      { id: '04', title: 'セキュリティとアクセス（80問）' },
-      { id: '05', title: 'オブジェクトマネージャとLightningアプリケーションビルダー（70問）' },
-      { id: '06', title: 'セールス＆マーケティングアプリケーション（54問）' },
-      { id: '07', title: 'サービス＆サポートアプリケーション（24問）' },
-      { id: '08', title: '活動の管理（5問）' },
-      { id: '09', title: 'データ管理と分析（81問）' },
-      { id: '10', title: 'ワークフローとプロセスの自動化（22問）' },
-      { id: '11', title: 'デスクトップとモバイルの活用（9問）' },
-      { id: '12', title: 'APPEXCHANGE（7問）' }
-    ];
+<script>
+  const categories = [
+    { id: "00", title: "初めの10問", file: "quiz_00.html" },
+    { id: "01", title: "組織とユーザ管理", file: "quiz_01.html" },
+    { id: "05", title: "オブジェクトマネージャとLightning", file: "quiz_05.html" },
+    { id: "11", title: "デスクトップとモバイルの管理", file: "quiz_11.html" }
+    // ※ 将来カテゴリ増えてもここは固定想定
+  ];
 
-    const progress =
-      JSON.parse(localStorage.getItem('quizProgress') || '{}');
+  const progress =
+    JSON.parse(localStorage.getItem("quizProgress") || "{}");
 
-    const list = document.getElementById('categoryList');
+  const list = document.getElementById("categoryList");
 
-    categories.forEach(cat => {
-      const li = document.createElement('li');
+  categories.forEach(cat => {
+    const p = progress[cat.id];
 
-      const title = document.createElement('div');
-      title.className = 'cat-title';
-      title.textContent = `${cat.id}. ${cat.title}`;
+    const div = document.createElement("div");
+    div.className = "category";
 
-      const prog = document.createElement('div');
-      prog.className = 'progress';
+    const title = document.createElement("div");
+    title.innerHTML = `<strong>${cat.title}</strong>`;
 
-      if (progress[cat.id]) {
-        prog.textContent =
-          `${progress[cat.id].total}問中 ${progress[cat.id].correct}問正解`;
-      } else {
-        prog.textContent = '未受験';
+    const prog = document.createElement("div");
+    prog.className = "progress";
+    prog.textContent = p
+      ? `${p.total}問中 ${p.correct}問正解`
+      : "未回答";
+
+    const buttons = document.createElement("div");
+    buttons.className = "buttons";
+
+    const startBtn = document.createElement("button");
+    startBtn.className = "start";
+    startBtn.textContent = "回答する";
+    startBtn.onclick = () => {
+      location.href = cat.file;
+    };
+
+    const resetBtn = document.createElement("button");
+    resetBtn.className = "reset";
+    resetBtn.textContent = "初期化";
+
+    // ==============================
+    // ★ 初期化処理（完全版）
+    // ==============================
+    resetBtn.onclick = () => {
+      if (!confirm(`「${cat.title}」の回答状況を初期化しますか？`)) {
+        return;
       }
 
-      const btnArea = document.createElement('div');
-      btnArea.className = 'btn-area';
+      // index 用進捗を削除
+      const p =
+        JSON.parse(localStorage.getItem("quizProgress") || "{}");
+      delete p[cat.id];
+      localStorage.setItem("quizProgress", JSON.stringify(p));
 
-      const link = document.createElement('a');
-      link.href = `quiz_${cat.id}.html`;
-      link.className = 'start-btn';
-      link.textContent = '解答する';
+      // クイズ画面用一時データも削除（Safari対策）
+      localStorage.removeItem("currentIndex");
+      localStorage.removeItem("correctCount");
 
-      const resetBtn = document.createElement('button');
-      resetBtn.className = 'reset-btn';
-      resetBtn.textContent = '初期化';
+      location.reload();
+    };
 
-      resetBtn.onclick = () => {
-        if (!confirm(`「${cat.title}」の回答状況を初期化しますか？`)) return;
+    buttons.appendChild(startBtn);
+    buttons.appendChild(resetBtn);
 
-        const p =
-          JSON.parse(localStorage.getItem('quizProgress') || '{}');
+    div.appendChild(title);
+    div.appendChild(prog);
+    div.appendChild(buttons);
 
-        delete p[cat.id];
-        localStorage.setItem('quizProgress', JSON.stringify(p));
-        location.reload();
-      };
+    list.appendChild(div);
+  });
+</script>
 
-      btnArea.appendChild(link);
-      btnArea.appendChild(resetBtn);
-
-      li.appendChild(title);
-      li.appendChild(prog);
-      li.appendChild(btnArea);
-
-      list.appendChild(li);
-    });
-  </script>
 </body>
 </html>
-
