@@ -94,7 +94,7 @@ document.getElementById('submitBtn').onclick = () => {
   updateScore();
 
   // ★ Safari対策：途中状態保存
-  localStorage.setItem('currentIndex', current);
+  localStorage.setItem('currentIndex', current + 1);
   localStorage.setItem('correctCount', correctCount);
 
   // ★ index 用進捗も毎問更新
