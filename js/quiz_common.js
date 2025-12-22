@@ -4,13 +4,17 @@ let questions = [];
 let current = Number(localStorage.getItem('currentIndex')) || 0;
 let correctCount = Number(localStorage.getItem('correctCount')) || 0;
 
-// ★ 回答済み数（正解した問題数）
+// ★ 回答済み数（回答した問題数）
 let answeredCount =
   Number(localStorage.getItem('answeredCount')) || 0;
 
 // ★ この問題をすでに正解したか
 let answeredCorrectly =
   localStorage.getItem('answeredCorrectly') === 'true';
+
+// ★ この問題をすでに回答したか（正誤問わず）
+let answeredOnce =
+  localStorage.getItem('answeredOnce') === 'true';
 
 fetch(`data/${DATA_FILE}`)
   .then(res => res.json())
@@ -28,6 +32,7 @@ fetch(`data/${DATA_FILE}`)
       localStorage.removeItem('correctCount');
       localStorage.removeItem('answeredCount');
       localStorage.removeItem('answeredCorrectly');
+      localStorage.removeItem('answeredOnce');
     }
 
     showQuestion();
@@ -60,15 +65,17 @@ function showQuestion() {
   document.getElementById('nextBtn').style.display = 'none';
   document.getElementById('topBtn').style.display = 'none';
 
-  // ★ 問題表示時は未正解状態
+  // ★ 問題表示時は未回答・未正解状態
   answeredCorrectly = false;
+  answeredOnce = false;
   localStorage.setItem('answeredCorrectly', 'false');
+  localStorage.setItem('answeredOnce', 'false');
 
   updateScore();
 }
 
 document.getElementById('submitBtn').onclick = () => {
-  // ★ すでに正解済みなら何もしない（連打防止）
+  // ★ すでに正解済みなら何もしない
   if (answeredCorrectly) return;
 
   const checked = [...document.querySelectorAll('input[name=choice]:checked')]
@@ -81,18 +88,23 @@ document.getElementById('submitBtn').onclick = () => {
   const isCorrect =
     JSON.stringify(checked) === JSON.stringify(answer);
 
+  // ★ 初回回答時のみ分母を増やす
+  if (!answeredOnce) {
+    answeredCount++;
+    answeredOnce = true;
+    localStorage.setItem('answeredCount', answeredCount);
+    localStorage.setItem('answeredOnce', 'true');
+  }
+
   let html = isCorrect
     ? "<p style='color:green;'>⭕ 正解！</p>"
     : "<p style='color:red;'>❌ 不正解</p>";
 
   if (isCorrect) {
     correctCount++;
-    answeredCount++;
     answeredCorrectly = true;
 
-    // ★ 状態保存
     localStorage.setItem('correctCount', correctCount);
-    localStorage.setItem('answeredCount', answeredCount);
     localStorage.setItem('answeredCorrectly', 'true');
   }
 
@@ -114,11 +126,7 @@ document.getElementById('submitBtn').onclick = () => {
   document.getElementById('nextBtn').style.display = 'inline';
   document.getElementById('topBtn').style.display = 'inline';
 
-  
-  // ★ 回答後にスコア更新
   updateScore();
-
-  // ★ index 用進捗も毎問更新
   saveProgress();
 };
 
@@ -127,6 +135,7 @@ document.getElementById('nextBtn').onclick = () => {
 
   localStorage.setItem('currentIndex', current);
   localStorage.removeItem('answeredCorrectly');
+  localStorage.removeItem('answeredOnce');
 
   if (current >= questions.length) {
     saveProgress();
@@ -135,6 +144,7 @@ document.getElementById('nextBtn').onclick = () => {
     localStorage.removeItem('correctCount');
     localStorage.removeItem('answeredCount');
     localStorage.removeItem('answeredCorrectly');
+    localStorage.removeItem('answeredOnce');
 
     alert(`終了！ ${correctCount}/${answeredCount} 正解`);
     location.href = 'index.html';
