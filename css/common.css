@@ -52,7 +52,7 @@ body {
 #result {
   max-width: 780px;
   padding: 5px 0px 20px;
-  margin: 16px 10px;
+  margin: 5px 10px;
   font-size: 16px;
 }
 
@@ -87,9 +87,10 @@ button {
 }
 
 #score {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-left: 12px;
+
+  font-size: 1.3rem !important;
+  font-weight: 600 !important;
+  padding: 0px 10px 20px !important;
 }
 
 
