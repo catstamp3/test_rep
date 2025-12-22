@@ -47,7 +47,7 @@ function showQuestion() {
 
   document.getElementById('result').innerHTML = '';
   document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('topBtn').style.display = 'none';
+  document.getElementById('topBtn').style.display = 'inline';
 
   // ★ 問題表示時点のスコア
   updateScore();
@@ -140,3 +140,4 @@ function saveProgress() {
 
   localStorage.setItem('quizProgress', JSON.stringify(progress));
 }
+
