@@ -94,6 +94,7 @@ document.getElementById('submitBtn').onclick = () => {
     answeredOnce = true;
     localStorage.setItem('answeredCount', answeredCount);
     localStorage.setItem('answeredOnce', 'true');
+    localStorage.setItem('currentIndex', current + 1);
   }
 
   let html = isCorrect
@@ -171,3 +172,4 @@ function saveProgress() {
 
   localStorage.setItem('quizProgress', JSON.stringify(progress));
 }
+
