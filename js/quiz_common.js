@@ -91,7 +91,6 @@ document.getElementById('submitBtn').onclick = () => {
   document.getElementById('topBtn').style.display = 'inline';
 
   // ★ 回答後にスコア更新
-  current++;
   updateScore();
 
   // ★ Safari対策：途中状態保存
@@ -140,4 +139,3 @@ function saveProgress() {
 
   localStorage.setItem('quizProgress', JSON.stringify(progress));
 }
-
