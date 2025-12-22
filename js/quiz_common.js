@@ -1,6 +1,6 @@
 let questions = [];
 
-// ★ Safari リロード対策：localStorage から復元
+// Safari リロード対策：localStorage から復元
 let current = Number(localStorage.getItem('currentIndex')) || 0;
 let correctCount = Number(localStorage.getItem('correctCount')) || 0;
 
@@ -9,6 +9,7 @@ fetch(`data/${DATA_FILE}`)
   .then(data => {
     document.getElementById('categoryTitle').textContent =
       data.categoryTitle;
+
     questions = data.questions;
 
     // 範囲外ガード
@@ -21,14 +22,6 @@ fetch(`data/${DATA_FILE}`)
 
     showQuestion();
   });
-
-function updateScore() {
-  const scoreEl = document.getElementById('score');
-  if (!scoreEl) return;
-
-  scoreEl.textContent =
-    `正解数：${correctCount} / ${current}`;
-}
 
 function showQuestion() {
   const q = questions[current];
@@ -47,10 +40,6 @@ function showQuestion() {
 
   document.getElementById('result').innerHTML = '';
   document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('topBtn').style.display = 'inline';
-
-  // ★ 問題表示時点のスコア
-  updateScore();
 }
 
 document.getElementById('submitBtn').onclick = () => {
@@ -64,68 +53,48 @@ document.getElementById('submitBtn').onclick = () => {
   const isCorrect =
     JSON.stringify(checked) === JSON.stringify(answer);
 
-  let html = isCorrect
-    ? "<p style='color:green;'>⭕ 正解！</p>"
-    : "<p style='color:red;'>❌ 不正解</p>";
+  let html = isCorrect ? '正解！' : '不正解';
 
   if (isCorrect) {
     correctCount++;
   }
 
-  // 正解番号表示
-  html += `<p>正解：${answer.map(i => i + 1).join('、')}</p>`;
-
-  // 解説（空でもOK）
   if (q.explanation) {
-    html += `
-      <div class="explanation"
-           style="margin-top:10px;padding:8px;border:1px solid #ccc;">
-        <strong>解説</strong><br>
-        ${q.explanation.replace(/\n/g, "<br>")}
-      </div>
-    `;
+    html += `<div class="explanation">${q.explanation}</div>`;
   }
 
   document.getElementById('result').innerHTML = html;
   document.getElementById('nextBtn').style.display = 'inline';
-  document.getElementById('topBtn').style.display = 'inline';
 
-  // ★ 回答後にスコア更新
-  updateScore();
-
-  // ★ Safari対策：途中状態保存
-  localStorage.setItem('currentIndex', current);
+  // ==============================
+  // ★ ここが今回の本質的な修正点
+  // 回答＝その問題は完了 → 次の問題番号を保存
+  // ==============================
+  localStorage.setItem('currentIndex', current + 1);
   localStorage.setItem('correctCount', correctCount);
 
-  // ★ index 用進捗も毎問更新
+  // index 用進捗も毎問更新
   saveProgress();
 };
 
 document.getElementById('nextBtn').onclick = () => {
+  current++;
 
-  // ★ Safari対策：進捗保存
   localStorage.setItem('currentIndex', current);
   localStorage.setItem('correctCount', correctCount);
 
   if (current >= questions.length) {
     saveProgress();
 
-    // 終了時は一時データ削除
     localStorage.removeItem('currentIndex');
     localStorage.removeItem('correctCount');
 
     alert(`終了！ ${correctCount}/${questions.length} 正解`);
-    location.href = 'index.html'; // リンク切れOK前提
+    location.href = 'index.html';
     return;
   }
 
   showQuestion();
-};
-
-document.getElementById('topBtn').onclick = () => {
-  saveProgress();
-  location.href = 'index.html';
-  return;
 };
 
 function saveProgress() {
