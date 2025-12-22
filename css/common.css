@@ -13,8 +13,8 @@ body {
 #questionArea {
   background: #ffffff;
   border-radius: 16px;
-  padding: 20px;
-  margin: 16px auto;
+  padding: 5px 30px 20px;
+  margin: 16px 10px;
   max-width: 720px;
 
   box-shadow: 0 6px 18px rgba(0,0,0,0.12);
@@ -32,14 +32,13 @@ body {
   display: flex;
   align-items: center;
 
-  padding: 14px 16px;
-  margin-bottom: 12px;
+  padding: 8px 16px;
 
   border-radius: 12px;
   background: #f9fafb;
 
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  font-size: 16px;
+  font-size: 18px;
 }
 
 /* チェックボックスを大きく */
@@ -51,8 +50,9 @@ body {
 
 /* 結果表示 */
 #result {
-  max-width: 720px;
-  margin: 16px auto;
+  max-width: 800px;
+  padding: 5px 0px 20px;
+  margin: 16px 10px;
   font-size: 16px;
 }
 
@@ -67,7 +67,7 @@ button {
   font-size: 18px;
   font-weight: 600;
 
-  padding: 14px 20px;
+  padding: 10px 18px;
   border-radius: 14px;
 
   border: none;
@@ -83,7 +83,7 @@ button {
 #submitBtn,
 #nextBtn,
 #topBtn {
-  margin: 10px 6px;
+  margin: 0px 6px;
 }
 
 /* モバイル最適化 */
