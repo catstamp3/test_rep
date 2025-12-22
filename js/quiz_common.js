@@ -27,7 +27,7 @@ function updateScore() {
   if (!scoreEl) return;
 
   scoreEl.textContent =
-    `正解数：${correctCount} / ${current + 1}`;
+    `正解数：${correctCount} / ${current}`;
 }
 
 function showQuestion() {
@@ -91,10 +91,11 @@ document.getElementById('submitBtn').onclick = () => {
   document.getElementById('topBtn').style.display = 'inline';
 
   // ★ 回答後にスコア更新
+  current++;
   updateScore();
 
   // ★ Safari対策：途中状態保存
-  localStorage.setItem('currentIndex', current + 1);
+  localStorage.setItem('currentIndex', current);
   localStorage.setItem('correctCount', correctCount);
 
   // ★ index 用進捗も毎問更新
@@ -102,7 +103,6 @@ document.getElementById('submitBtn').onclick = () => {
 };
 
 document.getElementById('nextBtn').onclick = () => {
-  current++;
 
   // ★ Safari対策：進捗保存
   localStorage.setItem('currentIndex', current);
