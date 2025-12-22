@@ -4,6 +4,9 @@ let questions = [];
 let current = Number(localStorage.getItem('currentIndex')) || 0;
 let correctCount = Number(localStorage.getItem('correctCount')) || 0;
 
+// ★ この問題が回答済みかどうか（正解時のみ true）
+let isAnswered = false;
+
 fetch(`data/${DATA_FILE}`)
   .then(res => res.json())
   .then(data => {
@@ -49,15 +52,20 @@ function showQuestion() {
     `;
   });
 
+  // ★ 新しい問題を表示したら未回答状態に戻す
+  isAnswered = false;
+
   document.getElementById('result').innerHTML = '';
   document.getElementById('nextBtn').style.display = 'none';
   document.getElementById('topBtn').style.display = 'none';
 
-  // ★ 問題表示時点のスコア
   updateScore();
 }
 
 document.getElementById('submitBtn').onclick = () => {
+  // ★ 正解済みの場合のみ再回答不可
+  if (isAnswered) return;
+
   const checked = [...document.querySelectorAll('input[name=choice]:checked')]
     .map(c => Number(c.value))
     .sort();
@@ -91,36 +99,38 @@ document.getElementById('submitBtn').onclick = () => {
   }
 
   document.getElementById('result').innerHTML = html;
-  document.getElementById('nextBtn').style.display = 'inline';
-  document.getElementById('topBtn').style.display = 'inline';
 
-  // ★ 回答後にスコア更新
+  if (isCorrect) {
+    // ★ 正解した場合のみロック
+    isAnswered = true;
+
+    document.getElementById('nextBtn').style.display = 'inline';
+    document.getElementById('topBtn').style.display = 'inline';
+
+    // ★ 正解したときだけ進捗保存
+    localStorage.setItem('currentIndex', current + 1);
+    localStorage.setItem('correctCount', correctCount);
+
+    saveProgress();
+  }
+
   updateScore();
-
-  // ★ Safari対策：途中状態保存
-  localStorage.setItem('currentIndex', current + 1);
-  localStorage.setItem('correctCount', correctCount);
-
-  // ★ index 用進捗も毎問更新
-  saveProgress();
 };
 
 document.getElementById('nextBtn').onclick = () => {
   current++;
 
-  // ★ Safari対策：進捗保存
   localStorage.setItem('currentIndex', current);
   localStorage.setItem('correctCount', correctCount);
 
   if (current >= questions.length) {
     saveProgress();
 
-    // 終了時は一時データ削除
     localStorage.removeItem('currentIndex');
     localStorage.removeItem('correctCount');
 
     alert(`終了！ ${correctCount}/${questions.length} 正解`);
-    location.href = 'index.html'; // リンク切れOK前提
+    location.href = 'index.html';
     return;
   }
 
