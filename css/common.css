@@ -50,7 +50,7 @@ body {
 
 /* 結果表示 */
 #result {
-  max-width: 800px;
+  max-width: 780px;
   padding: 5px 0px 20px;
   margin: 16px 10px;
   font-size: 16px;
@@ -85,6 +85,13 @@ button {
 #topBtn {
   margin: 0px 6px;
 }
+
+#score {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-left: 12px;
+}
+
 
 /* モバイル最適化 */
 @media (max-width: 768px) {
